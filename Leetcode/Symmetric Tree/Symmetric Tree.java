@@ -1,20 +1,44 @@
-/**
- * Definition for a binary tree node. public class TreeNode { int val; TreeNode
- * left; TreeNode right; TreeNode() {} TreeNode(int val) { this.val = val; }
- * TreeNode(int val, TreeNode left, TreeNode right) { this.val = val; this.left
- * = left; this.right = right; } }
- */
 class Solution {
     public boolean isSymmetric(TreeNode root) {
-        return isMirror(root, root);
-    }
-
-    public boolean isMirror(TreeNode t1, TreeNode t2) {
-        if (t1 == null && t2 == null)
-            return true;
-        if (t1 == null || t2 == null)
-            return false;
-
-        return (t1.val == t2.val) && isMirror(t1.left, t2.right) && isMirror(t1.right, t2.left);
+		
+		//if root is null, then tree is symmetric
+        if(root == null) return true;
+        
+		//make arraylist to hold the nodes, starting with root
+        ArrayList<TreeNode> arr = new ArrayList<>();
+        arr.add(root);
+		
+		boolean same = false; //variable to track progress
+        
+		//iterate until we have no nodes left.
+        while(arr.size() != 0)
+        {
+			//Go through the arraylist to check if the layer is symmetric
+            for(int i = 0; i < arr.size() / 2; i++)
+			{
+				//Nodes are symmetric only if value are same or both are null. If this is true, set our progress variable to true. Otherwise, return false.
+                if(arr.get(i) != null && arr.get(arr.size() - i - 1) != null && 
+                   arr.get(i).val == arr.get(arr.size() - i - 1).val || arr.get(i) == null && arr.get(arr.size() - i - 1) == null) same = true;
+                else return false;
+            }
+            
+			//create a temp arraylist to hold next layer of nodes.
+            ArrayList<TreeNode> temp = new ArrayList<>();
+            
+			//add nodes only if we are not at the end of the tree.
+            for(int i = 0; i < arr.size(); i++)
+            {
+                if(arr.get(i) != null)
+                { 
+                    temp.add(arr.get(i).left);
+                    temp.add(arr.get(i).right);
+                }
+            }
+            
+			//set the original arraylist to the new one we just created
+            arr = temp;
+        }
+        
+        return same;
     }
 }
